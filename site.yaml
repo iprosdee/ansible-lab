@@ -1,0 +1,41 @@
+---
+- hosts: webservers
+  tasks:
+    - name: installs httpd on all target nodes
+      dnf:
+        name: httpd
+        state: latest
+
+    - name: Start httpd service on target nodes
+      service:
+        name: httpd
+        state: started
+            
+    - name: Install Git on managed nodes
+      ansible.builtin.dnf:
+         name: git
+         state: present
+
+    - name: Validate git installation
+      ansible.builtin.command: git --version
+      register: git_version
+      changed_when: false
+
+    - name: Display git version
+      ansible.builtin.debug:
+        msg: "Installed {{ git_version.stdout }}"
+
+    - name: Ensure wget is installed
+      ansible.builtin.dnf:
+        name: wget
+        state: present
+
+    - name: Validate wget installation by checking its version
+      ansible.builtin.command: wget --version
+      register: wget_check
+      changed_when: false
+
+    - name: Ensure Vim Enhanced is installed
+      ansible.builtin.dnf:
+        name: vim-enhanced
+        state: present
